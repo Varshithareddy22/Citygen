@@ -1,0 +1,771 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+/* =========================================================
+   CityGenAI – Plans page
+   Sky + city scene behind frosted-glass cards
+   Free card = orange, Pro card = blue
+   Sized with vh so it fits one window; scrolls instead of
+   clipping if the window is extremely short.
+   ========================================================= */
+
+.pl-page {
+  --ink: #0f1c36;
+  --muted: #4d5d7d;
+  --blue: #1f6fe8;
+  --blue-2: #3b9bff;
+  --orange: #f08a1c;
+  --orange-2: #e8680a;
+  --font: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 24px;
+  color: var(--ink);
+  font-family: var(--font);
+  background: #4b8be0;
+}
+
+.pl-page *,
+.pl-page *::before,
+.pl-page *::after {
+  box-sizing: border-box;
+}
+
+.pl-page button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.pl-page button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.pl-nav,
+.pl-heading,
+.pl-cards {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   Background scene
+   ========================================================= */
+.pl-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    #2b66bd 0%,
+    #4b8be0 28%,
+    #8fc0ee 52%,
+    #cfe5f6 74%,
+    #eaf3f9 100%
+  );
+}
+
+.pl-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pl-photo {
+  position: absolute;
+  inset: 0;
+  background-position: center bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.pl-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 30, 70, 0.35), transparent 40%);
+}
+
+/* Mid skyline rises once on load */
+.pl-mid {
+  fill: #8db0d8;
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: pl-rise 1.1s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  animation-delay: var(--rise);
+}
+
+/* Windows twinkle */
+.pl-win {
+  fill: #fff7d6;
+  opacity: 0.15;
+  animation: pl-win 5s ease-in-out infinite both;
+  animation-delay: calc(1.4s + var(--d));
+}
+
+.pl-beacon {
+  fill: #7fe3ff;
+  animation: pl-blink 1.8s ease-in-out infinite;
+}
+
+/* River shimmer */
+.pl-shimmer {
+  animation: pl-flow 4s linear infinite;
+}
+
+.pl-shimmer.slow {
+  animation-duration: 7s;
+}
+
+/* Highway */
+.pl-lane-dash {
+  animation: pl-flow 1.2s linear infinite;
+}
+
+.pl-lane-car {
+  animation: pl-lane-a 9s linear infinite;
+}
+
+.pl-lane-car.b {
+  animation-name: pl-lane-b;
+  animation-duration: 12s;
+  animation-delay: -4s;
+}
+
+/* Trees sway gently */
+.pl-tree {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: pl-sway 6s ease-in-out infinite;
+  animation-delay: var(--s);
+}
+
+/* Clouds drift */
+.pl-cloud {
+  position: absolute;
+  left: -260px;
+  width: 170px;
+  height: 46px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  filter: blur(1px);
+  animation: pl-drift 110s linear infinite;
+}
+
+.pl-cloud::before,
+.pl-cloud::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.pl-cloud::before {
+  left: 28px;
+  bottom: 14px;
+  width: 72px;
+  height: 72px;
+}
+
+.pl-cloud::after {
+  left: 84px;
+  bottom: 10px;
+  width: 54px;
+  height: 54px;
+}
+
+.pl-cloud.c1 {
+  top: 22%;
+}
+
+.pl-cloud.c2 {
+  top: 38%;
+  scale: 0.7;
+  animation-duration: 150s;
+  animation-delay: -60s;
+}
+
+.pl-cloud.c3 {
+  top: 12%;
+  scale: 0.55;
+  animation-duration: 130s;
+  animation-delay: -95s;
+}
+
+/* =========================================================
+   Nav
+   ========================================================= */
+.pl-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(10px, 2vh, 18px) 0;
+}
+
+.pl-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+}
+
+.pl-logo {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+}
+
+.pl-logo svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: #7fd3ff;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pl-brand-text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.pl-brand-text em {
+  font-style: normal;
+  color: #7fd3ff;
+}
+
+.pl-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.6vw, 34px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pl-link {
+  position: relative;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.pl-link:hover,
+.pl-link.active {
+  color: #fff;
+}
+
+.pl-link.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: #7fd3ff;
+}
+
+.pl-app {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-2));
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 10px 22px -10px rgba(10, 40, 110, 0.8);
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.pl-app:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+/* =========================================================
+   Heading
+   ========================================================= */
+.pl-heading {
+  flex: 0 0 auto;
+  padding: clamp(2px, 1.4vh, 14px) 0 clamp(10px, 2.2vh, 20px);
+  text-align: center;
+  text-shadow: 0 2px 14px rgba(8, 30, 80, 0.35);
+}
+
+.pl-heading h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.8rem, min(3.8vw, 6vh), 2.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.pl-heading h1 span {
+  color: #7fd3ff;
+}
+
+.pl-heading p {
+  margin: clamp(4px, 1vh, 10px) 0 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(0.88rem, 1.9vh, 1rem);
+  font-weight: 500;
+}
+
+/* =========================================================
+   Cards (frosted glass)
+   ========================================================= */
+.pl-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.pl-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(14px, 2.6vh, 26px) 26px clamp(34px, 7vh, 58px);
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1.5px solid var(--edge);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 24px 50px -26px rgba(8, 24, 64, 0.65);
+}
+
+.pl-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pl-card > .pl-mini {
+  position: absolute;
+  z-index: 0;
+}
+
+/* Free = orange */
+.pl-card-free {
+  --accent: var(--orange);
+  --accent-deep: #b85a00;
+  --accent-soft: rgba(255, 255, 255, 0.55);
+  --edge: rgba(245, 160, 70, 0.75);
+  --glass: linear-gradient(160deg, rgba(255, 249, 240, 0.9), rgba(255, 234, 208, 0.82));
+  --btn: linear-gradient(90deg, var(--orange-2), #f79a2e);
+}
+
+/* Pro = blue */
+.pl-card-pro {
+  --accent: var(--blue);
+  --accent-deep: #1b55b8;
+  --accent-soft: rgba(255, 255, 255, 0.6);
+  --edge: rgba(80, 150, 245, 0.75);
+  --glass: linear-gradient(160deg, rgba(243, 249, 255, 0.9), rgba(208, 228, 255, 0.82));
+  --btn: linear-gradient(90deg, var(--blue), var(--blue-2));
+}
+
+.pl-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pl-title h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 3.1vh, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.pl-chip {
+  padding: 4px 11px;
+  border-radius: 7px;
+  border: 1px solid var(--edge);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--accent-deep);
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pl-desc {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Price + generations */
+.pl-mid-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 18px;
+  margin: clamp(8px, 2vh, 18px) 0;
+}
+
+.pl-price {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.pl-price small {
+  align-self: flex-start;
+  margin-top: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pl-price b {
+  font-size: clamp(2.3rem, 6.4vh, 3.3rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+}
+
+.pl-price span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.pl-plots-box {
+  min-width: 0;
+  padding: 9px 12px 11px;
+  border-radius: 12px;
+  border: 1px solid var(--edge);
+  background: var(--accent-soft);
+}
+
+.pl-plots-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.pl-plots-top strong {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.pl-plots-top i {
+  font-style: normal;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.pl-infinity {
+  color: var(--accent);
+  font-size: 1.3rem;
+  line-height: 0.5;
+}
+
+.pl-plots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.pl-plot {
+  display: grid;
+  place-items: center;
+  height: clamp(30px, 5.2vh, 40px);
+  border-radius: 8px;
+}
+
+.pl-plot.open {
+  border: 1.5px dashed var(--accent);
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--accent);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.pl-plot.built {
+  border: 1px solid var(--edge);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.pl-plot svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Button */
+.pl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: clamp(10px, 1.9vh, 13px) 20px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--btn);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 12px 24px -12px var(--accent);
+  transition: filter 0.2s, transform 0.2s;
+}
+
+.pl-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.pl-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pl-btn.is-loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.pl-arrow {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.pl-btn:hover:not(:disabled) .pl-arrow {
+  transform: translateX(4px);
+}
+
+/* Features */
+.pl-included {
+  margin: clamp(8px, 1.8vh, 16px) 0 clamp(6px, 1.2vh, 10px);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pl-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(5px, 1.1vh, 9px) 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pl-features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #243455;
+}
+
+.pl-check {
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  padding: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Mini skyline at the card bottom */
+.pl-mini {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(28px, 5.6vh, 48px);
+  pointer-events: none;
+}
+
+.pl-mini svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pl-mini-b {
+  fill: var(--accent);
+  opacity: 0.2;
+}
+
+.pl-mini-win {
+  fill: #fff;
+  opacity: 0.2;
+  animation: pl-win 5s ease-in-out infinite both;
+  animation-delay: var(--d);
+}
+
+.pl-turbine line {
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.pl-blades {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pl-spin 6s linear infinite;
+}
+
+/* =========================================================
+   Keyframes
+   ========================================================= */
+@keyframes pl-rise {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes pl-win {
+  0%, 100% { opacity: 0.15; }
+  45%, 60% { opacity: 0.95; }
+}
+
+@keyframes pl-blink {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+
+@keyframes pl-flow {
+  to { stroke-dashoffset: -88; }
+}
+
+@keyframes pl-lane-a {
+  from { transform: translateX(1000px); }
+  to { transform: translateX(1440px); }
+}
+
+@keyframes pl-lane-b {
+  from { transform: translateX(1440px); }
+  to { transform: translateX(1000px); }
+}
+
+@keyframes pl-sway {
+  0%, 100% { transform: rotate(-1.2deg); }
+  50% { transform: rotate(1.2deg); }
+}
+
+@keyframes pl-drift {
+  to { transform: translateX(calc(100vw + 520px)); }
+}
+
+@keyframes pl-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   Keep everything in one window on shorter screens
+   ========================================================= */
+@media (max-height: 760px) {
+  .pl-desc { font-size: 0.8rem; }
+}
+
+@media (max-height: 700px) {
+  .pl-heading p { display: none; }
+}
+
+@media (max-height: 620px) {
+  .pl-desc { display: none; }
+  .pl-mini { display: none; }
+  .pl-card { padding-bottom: clamp(14px, 2.4vh, 22px); }
+}
+
+/* Narrow screens */
+@media (max-width: 960px) {
+  .pl-links { display: none; }
+}
+
+@media (max-width: 860px) {
+  .pl-page {
+    height: auto;
+    min-height: 100dvh;
+    padding: 0 16px;
+  }
+
+  .pl-cards {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+  }
+
+  .pl-heading p,
+  .pl-desc { display: block; }
+  .pl-mini { display: block; }
+}
+
+@media (max-width: 520px) {
+  .pl-mid-row { grid-template-columns: 1fr; gap: 12px; }
+  .pl-features { grid-template-columns: 1fr; }
+}
+
+/* Reduced motion: keep the static scene, stop the movement */
+@media (prefers-reduced-motion: reduce) {
+  .pl-mid,
+  .pl-win,
+  .pl-beacon,
+  .pl-shimmer,
+  .pl-lane-dash,
+  .pl-lane-car,
+  .pl-tree,
+  .pl-cloud,
+  .pl-blades,
+  .pl-mini-win {
+    animation: none !important;
+  }
+
+  .pl-lane-car { display: none; }
+}

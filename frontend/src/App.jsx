@@ -1,32 +1,48 @@
-import { useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
-import Landing from "./pages/Landing";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import LandingPage from "./pages/LandingPage";
+import Plans from "./pages/Plans";
+import CityGenerator from "./pages/CityGenerator";
+import CityViewer from "./pages/CityViewer";
 
-export default function App() {
-  const [page, setPage] = useState("landing");
-
+function App() {
   return (
-    <div className="min-h-screen bg-[#050607] text-white">
+    <BrowserRouter>
 
-      {page === "landing" && (
-        <Landing
-          onStart={() => setPage("login")}
+      <Routes>
+
+        {/* Landing Page */}
+        <Route
+          path="/"
+          element={<LandingPage />}
         />
-      )}
 
-      {page === "login" && (
-        <Login
-          onLogin={() => setPage("dashboard")}
-          onBack={() => setPage("landing")}
+        {/* Plans */}
+        <Route
+          path="/plans"
+          element={<Plans />}
         />
-      )}
 
-      {page === "dashboard" && (
-        <Dashboard />
-      )}
+        {/* City Input / Generator */}
+        <Route
+          path="/generate"
+          element={<CityGenerator />}
+        />
 
-    </div>
+        {/* Generated City */}
+        <Route
+          path="/city/:cityId"
+          element={<CityViewer />}
+        />
+
+      </Routes>
+
+    </BrowserRouter>
   );
 }
+
+export default App;
